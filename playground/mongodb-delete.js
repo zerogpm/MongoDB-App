@@ -7,23 +7,23 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, db) => {
   }
   console.log('Connected to MongoDB server');
 
-  // deleteMany
-  // db.collection('Users').deleteMany({
-  //   name : 'chris'
-  // }).then((result) => {
-  //   console.log(JSON.stringify(result, undefined, 2));
-  // }, (err) => {
-  //   console.log('Unable to fetch todos', err);
-  // });
+  //deleteMany
+  db.collection('Users').deleteMany({
+    name : 'chris'
+  }).then((result) => {
+    console.log(JSON.stringify(result, undefined, 2));
+  }, (err) => {
+    console.log('Unable to fetch todos', err);
+  });
 
-  // deleteOne
-  // db.collection('Todos').deleteOne({
-  //   text : 'walk the dog'
-  // }).then((result) => {
-  //   console.log(JSON.stringify(result, undefined, 2));
-  // }, (err) => {
-  //   console.log('Unable to fetch todos', err);
-  // });
+  //deleteOne
+  db.collection('Todos').deleteOne({
+    text : 'walk the dog'
+  }).then((result) => {
+    console.log(JSON.stringify(result, undefined, 2));
+  }, (err) => {
+    console.log('Unable to fetch todos', err);
+  });
 
   //findOneAndDelete
   db.collection('Users').findOneAndDelete({
