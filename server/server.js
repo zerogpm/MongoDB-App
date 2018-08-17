@@ -82,6 +82,20 @@ app.get('/todos/:id', (req, res) => {
   }).catch((err) => res.status(400).send({status: 'fail'}));
 });
 
+//POST /users
+app.post('/users', (req, res) => {
+ let body = _.pick(req.body, ['name', 'email', 'password']);
+ let user = new User(body);
+
+ user.save().then((user) => {
+   res.send(user);
+ },(err) => {
+   res.status(400).send(err);
+ }).catch((e) => {
+   res.status(400).send(e);
+ });
+
+});
 
 if(!module.parent){
   app.listen(3000, () => {
