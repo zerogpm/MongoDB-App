@@ -1,7 +1,9 @@
 let mongoose = require('mongoose');
 const validator = require('validator');
+const jwt = require('jsonwebtoken');
+const _ = require('lodash');
 
-let User = mongoose.model('User', {
+var UserSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -37,5 +39,28 @@ let User = mongoose.model('User', {
     }
   ]
 });
+
+/**
+ * You can't send a javascript object through HTTP,
+ * so when you try to do that, express will automatically realize and call JSON.stringify on it for you,
+ * that's happening when you: res.send(object)
+ */
+UserSchema.methods.toJSON = function () {
+  var user = this;
+  var userObject = user.toObject();
+  return _.pick(userObject, ['_id', 'email']);
+};
+
+UserSchema.methods.generateAuthToken = function () {
+  var user = this;
+  var access = 'auth';
+  var token = jwt.sign({_id: user._id.toHexString(), access}, 'abc123').toString();
+  user.tokens = user.tokens.concat([{access, token}]);
+  return user.save().then(() => {
+    return token;
+  })
+};
+
+var User = mongoose.model('User', UserSchema);
 
 module.exports = {User};
