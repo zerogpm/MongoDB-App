@@ -83,19 +83,18 @@ app.get('/todos/:id', (req, res) => {
   }).catch((err) => res.status(400).send({status: 'fail'}));
 });
 
-//POST /users
+// POST /users
 app.post('/users', (req, res) => {
- let body = _.pick(req.body, ['name', 'email', 'password']);
- let user = new User(body);
+  var body = _.pick(req.body, ['email', 'password']);
+  var user = new User(body);
 
- user.save().then(() => {
-   return user.generateAuthToken();
- }).then((token) => {
-   res.header('x-auth', token).send(user);
- })
-   .catch((e) => {
-   res.status(400).send(e);
- });
+  user.save().then(() => {
+    return user.generateAuthToken();
+  }).then((token) => {
+    res.header('x-auth', token).send(user);
+  }).catch((e) => {
+    res.status(400).send(e);
+  })
 });
 
 app.get('/users/me', authenticate, (req, res) => {
