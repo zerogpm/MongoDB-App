@@ -11,9 +11,10 @@ var {authenticate} = require('./middleware/authenticate');
 var app = express();
 app.use(bodyParser.json());
 
-app.post('/todos', (req, res) => {
+app.post('/todos', authenticate, (req, res) => {
   let todo = new Todo({
-    text: req.body.text
+    text: req.body.text,
+    _creator: req.user._id
   });
 
   todo.save().then((doc) => {
@@ -60,9 +61,11 @@ app.patch('/todos/:id', (req, res) => {
   }).catch((e) => res.status(400).send({status:'Failed at the end'}));
 });
 
-app.get('/todos', (req, res) => {
+app.get('/todos', authenticate, (req, res) => {
 
-  Todo.find().then((todos) => {
+  Todo.find({
+    _creator: req.user._id
+  }).then((todos) => {
     res.send({todos});
   }, (err) => {
     res.status(400).send(err);
